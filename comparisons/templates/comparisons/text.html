@@ -1,0 +1,180 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Text Duplicate Detection</title>
+    <style>
+        body { 
+            background: linear-gradient(135deg, #6bdba3 0%, #f8c62c 100%);
+            font-family: 'Segoe UI', Arial, sans-serif;
+            margin: 0;
+            padding: 40px;
+            color: #333;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        h1 {
+            font-size: 32px;
+            font-weight: 600;
+            margin-bottom: 30px;
+            color: #2c3e50;
+            text-align: center;
+            position: relative;
+        }
+
+        h1:after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 4px;
+            background: #f8c62c;
+            margin: 15px auto;
+            border-radius: 2px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block; 
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: 16px;
+        }
+
+        input[type="text"], input[type="number"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        input[type="text"]:focus, input[type="number"]:focus {
+            border-color: #6bdba3;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(107, 219, 163, 0.2);
+        }
+
+        .btn {
+            display: inline-block;
+            background: linear-gradient(90deg, #f8c62c, #6bdba3);
+            color: white;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            text-align: center;
+            margin: 10px 0;
+            width: 100%;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn.home {
+            background: linear-gradient(90deg, #6bdba3, #4CAF50);
+            margin-top: 20px;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            margin-top: 20px;
+            color: #2c3e50;
+            font-weight: 500;
+        }
+
+        .loading:after {
+            content: '...';
+            animation: dots 1.5s steps(5, end) infinite;
+        }
+
+        @keyframes dots {
+            0%, 20% { content: '.'; }
+            40% { content: '..'; }
+            60%, 100% { content: '...'; }
+        }
+
+        form {
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Text Duplicate Detection</h1>
+        <form method="post" target="_blank">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="folder_path">📂 Folder Path</label>
+                <input type="text" name="folder_path" placeholder="Enter the path to your text files" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="threshold">📊 Similarity Threshold (%)</label>
+                <input type="number" id="threshold" name="threshold" min="0" max="100" placeholder="Enter similarity threshold" required>
+            </div>
+            
+            <button type="submit" class="btn">🔍 Check Redundancy</button>
+        </form>
+
+        <p class="loading">Processing your request</p>
+        
+        <a href="{% url 'home' %}">
+            <button class="btn" style="background-color: #28a745;">🏠 Back to Home</button>
+        </a>
+
+        {% if result %}
+            <h2>Results</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Text 1</th>
+                        <th>Text 2</th>
+                        <th>Cosine Similarity</th>
+                        <th>Highlighted Redundancy</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in result %}
+                        <tr>
+                            <td>{{ row.Text1 }}</td>
+                            <td>{{ row.Text2 }}</td>
+                            <td>{{ row.CosineSimilarity }}</td>
+                            <td>{{ row.HighlightedRedundancy }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+    </div>
+
+    <script>
+        document.querySelector("form").addEventListener("submit", function() {
+            document.querySelector(".loading").style.display = "block";
+            document.querySelector("button[type=submit]").disabled = true;
+        });
+    </script>
+</body>
+</html>

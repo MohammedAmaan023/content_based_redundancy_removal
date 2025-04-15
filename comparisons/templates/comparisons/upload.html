@@ -1,0 +1,366 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Compare Two Images</title>
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #6bdba3 0%, #f8c62c 100%);
+            --primary-color: #6bdba3;
+            --secondary-color: #2c3e50;
+            --accent-color: #f8c62c;
+            --background-color: #ffffff;
+            --box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            margin: 0;
+            padding: 40px;
+            min-height: 100vh;
+            background: var(--primary-gradient);
+            color: var(--secondary-color);
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: var(--box-shadow);
+            backdrop-filter: blur(10px);
+        }
+
+        h1 {
+            text-align: center;
+            color: var(--secondary-color);
+            margin-bottom: 40px;
+            font-weight: 600;
+            font-size: 32px;
+            position: relative;
+        }
+
+        h1::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 4px;
+            background: var(--accent-color);
+            margin: 15px auto;
+            border-radius: 2px;
+        }
+
+        .upload-section {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            margin-bottom: 30px;
+        }
+
+        .file-inputs {
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+
+        .file-input-wrapper {
+            flex: 1;
+            max-width: 300px;
+            text-align: center;
+        }
+
+        .file-input-wrapper input[type="file"] {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            border: 2px dashed var(--primary-color);
+            border-radius: 8px;
+            background: #f8f9fa;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .file-input-wrapper input[type="file"]:hover {
+            border-color: var(--accent-color);
+            background: #fff;
+        }
+
+        .preview-container {
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        .preview-box {
+            width: 400px;
+            height: 300px;
+            border: 2px dashed #cbd5e0;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            background: #f8f9fa;
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+
+        .preview-box:hover {
+            border-color: var(--primary-color);
+            box-shadow: var(--box-shadow);
+        }
+
+        .preview-image {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            border-radius: 8px;
+        }
+
+        .preview-label {
+            position: absolute;
+            color: #718096;
+            font-size: 1.1em;
+            font-weight: 500;
+            z-index: 1;
+            text-align: center;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 8px;
+            box-shadow: var(--box-shadow);
+        }
+
+        .preview-box.has-image .preview-label {
+            display: none;
+        }
+
+        .compare-btn {
+            background: var(--primary-gradient);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 16px;
+            border-radius: 25px;
+            cursor: pointer;
+            display: block;
+            margin: 30px auto 0;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .compare-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .similarity-result {
+            text-align: center;
+            margin: 30px 0;
+            padding: 30px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .similarity-value {
+            font-size: 28px;
+            color: var(--primary-color);
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .error {
+            background-color: #fff5f5;
+            color: #e53e3e;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            margin: 20px 0;
+            border: 1px solid #feb2b2;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            color: var(--secondary-color);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 16px;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+            background: var(--primary-gradient);
+            color: white;
+            padding: 12px 30px;
+            border-radius: 25px;
+        }
+
+        .back-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .back-link::before {
+            content: '←';
+            margin-right: 8px;
+            font-size: 1.2em;
+        }
+
+        .actions {
+            text-align: center;
+            margin-top: 30px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .examples-link {
+            display: inline-flex;
+            align-items: center;
+            color: var(--secondary-color);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: white;
+            padding: 12px 30px;
+            border-radius: 25px;
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .examples-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            background: var(--primary-gradient);
+            color: white;
+            border-color: transparent;
+        }
+
+        @media (max-width: 768px) {
+            .file-inputs {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .preview-container {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .preview-box {
+                width: 100%;
+                max-width: 400px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Image Redundancy Checker</h1>
+
+        <div class="upload-section">
+            <form method="post" enctype="multipart/form-data" id="uploadForm">
+                {% csrf_token %}
+                <div class="file-inputs">
+                    <div class="file-input-wrapper">
+                        <input type="file" name="image1" accept="image/*" required onchange="previewImage(this, 'preview1')" title="Choose first image">
+                    </div>
+                    <div class="file-input-wrapper">
+                        <input type="file" name="image2" accept="image/*" required onchange="previewImage(this, 'preview2')" title="Choose second image">
+                    </div>
+                </div>
+
+                <div class="preview-container">
+                    <div class="preview-box" id="previewBox1">
+                        <span class="preview-label">Select First Image</span>
+                        <img id="preview1" class="preview-image" alt="First Image Preview" 
+                             {% if img1_data %}src="{{ img1_data }}"{% endif %}>
+                    </div>
+                    <div class="preview-box" id="previewBox2">
+                        <span class="preview-label">Select Second Image</span>
+                        <img id="preview2" class="preview-image" alt="Second Image Preview"
+                             {% if img2_data %}src="{{ img2_data }}"{% endif %}>
+                    </div>
+                </div>
+
+                <button type="submit" class="compare-btn">Check Redundancy</button>
+            </form>
+        </div>
+
+        {% if error %}
+            <div class="error">{{ error }}</div>
+        {% endif %}
+
+        {% if similarity %}
+            <div class="similarity-result">
+                <div class="similarity-value">Similarity: {{ similarity }}</div>
+            </div>
+        {% endif %}
+
+        <div class="actions">
+            <a href="{% url 'home' %}" class="back-link">Back to Home</a>
+            <a href="{% url 'example' %}" class="examples-link" target="_blank">View Examples</a>
+        </div>
+    </div>
+
+    <script>
+        function previewImage(input, previewId) {
+            const preview = document.getElementById(previewId);
+            const previewBox = preview.parentElement;
+            
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
+                    previewBox.classList.add('has-image');
+                }
+                
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        function resetForm() {
+            const form = document.getElementById('uploadForm');
+            if (form) form.reset();
+
+            const preview1 = document.getElementById('preview1');
+            const preview2 = document.getElementById('preview2');
+            const previewBox1 = document.getElementById('previewBox1');
+            const previewBox2 = document.getElementById('previewBox2');
+
+            if (preview1) {
+                preview1.src = '';
+                preview1.style.display = 'none';
+            }
+            if (preview2) {
+                preview2.src = '';
+                preview2.style.display = 'none';
+            }
+            if (previewBox1) previewBox1.classList.remove('has-image');
+            if (previewBox2) previewBox2.classList.remove('has-image');
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const preview1 = document.getElementById('preview1');
+            const preview2 = document.getElementById('preview2');
+            const previewBox1 = document.getElementById('previewBox1');
+            const previewBox2 = document.getElementById('previewBox2');
+
+            if (preview1.src && preview1.src !== window.location.href) {
+                preview1.style.display = 'block';
+                previewBox1.classList.add('has-image');
+            }
+            if (preview2.src && preview2.src !== window.location.href) {
+                preview2.style.display = 'block';
+                previewBox2.classList.add('has-image');
+            }
+        });
+    </script>
+</body>
+</html>

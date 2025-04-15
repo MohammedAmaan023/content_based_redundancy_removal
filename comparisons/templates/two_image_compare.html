@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Compare Two Images</title>
+</head>
+<body>
+    <h1>Compare Two Images</h1>
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type="file" name="image1" required>
+        <input type="file" name="image2" required><br><br>
+        <button type="submit">Compare</button>
+    </form>
+
+    {% if image1_url and image2_url %}
+        <h2>Images:</h2>
+        <img src="{{ image1_url }}" alt="Image 1" width="300">
+        <img src="{{ image2_url }}" alt="Image 2" width="300">
+
+        <h3>Similarity: {{ similarity|floatformat:2 }}%</h3>
+    {% endif %}
+
+    <a href="{% url 'home' %}">Back to Home</a>
+</body>
+</html>

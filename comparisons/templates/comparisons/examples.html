@@ -1,0 +1,158 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Example Images</title>
+    <style>
+        body {
+            background: linear-gradient(135deg, #6bdba3 0%, #f8c62c 100%);
+            font-family: 'Segoe UI', Arial, sans-serif;
+            margin: 0;
+            padding: 40px;
+            color: #333;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: auto;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        h1 {
+            font-size: 32px;
+            font-weight: 600;
+            margin-bottom: 30px;
+            color: #2c3e50;
+            text-align: center;
+            position: relative;
+        }
+
+        h1:after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 4px;
+            background: #f8c62c;
+            margin: 15px auto;
+            border-radius: 2px;
+        }
+
+        .examples-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin: 30px 0;
+        }
+
+        .example-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .example-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .image-container {
+            position: relative;
+            padding-top: 75%;
+            overflow: hidden;
+        }
+
+        .image-container img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .example-info {
+            padding: 20px;
+            text-align: center;
+        }
+
+        .example-info h3 {
+            margin: 0 0 10px 0;
+            color: #2c3e50;
+        }
+
+        .example-info p {
+            color: #666;
+            margin: 0;
+            line-height: 1.6;
+        }
+
+        .btn {
+            display: inline-block;
+            background: linear-gradient(90deg, #f8c62c, #6bdba3);
+            color: white;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            text-align: center;
+            margin: 10px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn.home {
+            background: linear-gradient(90deg, #6bdba3, #4CAF50);
+        }
+
+        .controls {
+            text-align: center;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Example Images</h1>
+        
+        <div class="examples-grid">
+            <div class="example-card">
+                <div class="image-container">
+                    <img src="{% static 'comparisons/examples/example1.jpg' %}" alt="Example 1">
+                </div>
+                <div class="example-info">
+                    <h3>Similar Images</h3>
+                    <p>These images show high similarity due to similar content and composition.</p>
+                </div>
+            </div>
+            
+            <div class="example-card">
+                <div class="image-container">
+                    <img src="{% static 'comparisons/examples/example2.jpg' %}" alt="Example 2">
+                </div>
+                <div class="example-info">
+                    <h3>Different Images</h3>
+                    <p>These images show low similarity due to different content and composition.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <a href="{% url 'compare_two_images' %}" class="btn">🖼️ Try Image Comparison</a>
+            <a href="{% url 'home' %}" class="btn home">🏠 Back to Home</a>
+        </div>
+    </div>
+</body>
+</html> 
