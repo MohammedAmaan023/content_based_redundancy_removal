@@ -6,6 +6,6 @@ cv2
 torch
 sklearn
 pillow
-google generativeai
+google-generativeai
 gunicorn
 pymupdf
