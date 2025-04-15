@@ -1,0 +1,23 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environment
+venv/
+
+# SQLite database
+db.sqlite3
+
+# VS Code settings
+.vscode/
+
+# Jupyter checkpoints
+.ipynb_checkpoints/
+
+# Static files (if generated dynamically)
+staticfiles/
+
+# OS files
+.DS_Store
+Thumbs.db

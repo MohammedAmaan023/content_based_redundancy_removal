@@ -1,0 +1,278 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Text Analysis Results</title>
+    <style>
+        body { 
+            background: linear-gradient(135deg, #6bdba3 0%, #f8c62c 100%);
+            font-family: 'Segoe UI', Arial, sans-serif;
+            margin: 0;
+            padding: 40px;
+            color: #333;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: auto;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        h1 {
+            font-size: 32px;
+            font-weight: 600;
+            margin-bottom: 30px;
+            color: #2c3e50;
+            text-align: center;
+            position: relative;
+        }
+
+        h1:after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 4px;
+            background: #f8c62c;
+            margin: 15px auto;
+            border-radius: 2px;
+        }
+
+        .results-info {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            border-left: 5px solid #6bdba3;
+        }
+
+        .results-info p {
+            margin: 5px 0;
+            color: #2c3e50;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            margin: 20px 0;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .results-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .table-header {
+            background: #f8f9fa;
+            position: sticky;
+            top: 0;
+            z-index: 1;
+        }
+
+        .table-header th {
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            color: #2c3e50;
+            border-bottom: 2px solid #e0e0e0;
+            position: relative;
+            min-width: 150px;
+        }
+
+        .resize-handle {
+            position: absolute;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            width: 5px;
+            background: #6bdba3;
+            cursor: col-resize;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .table-header th:hover .resize-handle {
+            opacity: 1;
+        }
+
+        .table-row td {
+            padding: 15px;
+            border-bottom: 1px solid #e0e0e0;
+            vertical-align: top;
+        }
+
+        .table-row:hover {
+            background-color: #f8f9fa;
+        }
+
+        .text-cell {
+            max-width: 300px;
+            word-wrap: break-word;
+        }
+
+        .similarity-cell {
+            text-align: center;
+            font-weight: 600;
+            color: #2c3e50;
+            min-width: 100px;
+        }
+
+        .redundancy-cell {
+            color: #e74c3c;
+            max-width: 300px;
+            word-wrap: break-word;
+        }
+
+        .table-controls {
+            margin: 20px 0;
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .btn {
+            display: inline-block;
+            background: linear-gradient(90deg, #f8c62c, #6bdba3);
+            color: white;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            text-align: center;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn.home {
+            background: linear-gradient(90deg, #6bdba3, #4CAF50);
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 40px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .zoom-controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            justify-content: center;
+        }
+
+        .zoom-btn {
+            background: #f8f9fa;
+            border: 1px solid #e0e0e0;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .zoom-btn:hover {
+            background: #e0e0e0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Text Analysis Results</h1>
+        
+        <div class="results-info">
+            <p><strong>Folder Path:</strong> {{ folder_path }}</p>
+            <p><strong>Similarity Threshold:</strong> {{ threshold }}%</p>
+        </div>
+
+        {% if result %}
+            <div class="zoom-controls">
+                <button class="zoom-btn" onclick="zoomTable(0.9)">🔍 Zoom Out</button>
+                <button class="zoom-btn" onclick="zoomTable(1.1)">🔍 Zoom In</button>
+            </div>
+
+            <div class="table-container">
+                <table class="results-table">
+                    <thead class="table-header">
+                        <tr>
+                            <th>First Text<div class="resize-handle"></div></th>
+                            <th>Second Text<div class="resize-handle"></div></th>
+                            <th>Similarity<div class="resize-handle"></div></th>
+                            <th>Redundant Parts<div class="resize-handle"></div></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in result %}
+                            <tr class="table-row">
+                                <td class="text-cell">{{ row.Text1 }}</td>
+                                <td class="text-cell">{{ row.Text2 }}</td>
+                                <td class="similarity-cell">{{ row.CosineSimilarity }}%</td>
+                                <td class="redundancy-cell">{{ row.HighlightedRedundancy }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="no-results">
+                <p>No redundant texts found with the given threshold.</p>
+            </div>
+        {% endif %}
+
+        <div class="table-controls">
+            <a href="{% url 'text' %}" class="btn">🔍 New Analysis</a>
+            <a href="{% url 'home' %}" class="btn home">🏠 Back to Home</a>
+        </div>
+    </div>
+
+    <script>
+        // Column resizing functionality
+        document.querySelectorAll('.resize-handle').forEach(handle => {
+            let startX, startWidth;
+            
+            handle.addEventListener('mousedown', initDrag, false);
+            
+            function initDrag(e) {
+                startX = e.clientX;
+                startWidth = parseInt(document.defaultView.getComputedStyle(handle.parentElement).width, 10);
+                document.documentElement.addEventListener('mousemove', doDrag, false);
+                document.documentElement.addEventListener('mouseup', stopDrag, false);
+            }
+            
+            function doDrag(e) {
+                handle.parentElement.style.width = (startWidth + e.clientX - startX) + 'px';
+            }
+            
+            function stopDrag() {
+                document.documentElement.removeEventListener('mousemove', doDrag, false);
+                document.documentElement.removeEventListener('mouseup', stopDrag, false);
+            }
+        });
+
+        // Table zoom functionality
+        function zoomTable(factor) {
+            const table = document.querySelector('.results-table');
+            const currentZoom = parseFloat(table.style.zoom || 1);
+            const newZoom = currentZoom * factor;
+            
+            // Limit zoom between 0.5 and 2
+            if (newZoom >= 0.5 && newZoom <= 2) {
+                table.style.zoom = newZoom;
+            }
+        }
+    </script>
+</body>
+</html> 

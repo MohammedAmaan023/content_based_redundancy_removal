@@ -1,0 +1,37 @@
+{% load static %}
+
+<a href="#" onclick="toggleExamples()">See examples of redundant & non-redundant images</a>
+
+<div id="examples" style="display:none; margin-top: 20px;">
+    <h3>Example Images</h3>
+
+    <div style="display: flex; flex-wrap: wrap; gap: 20px;">
+        <div style="text-align: center;">
+            <img src="{% static 'examples/a1.jpg' %}" width="150" style="border: 1px solid #ccc;" />
+            <p><strong>Redundant</strong></p>
+        </div>
+        <div style="text-align: center;">
+            <img src="{% static 'examples/a2.jpg' %}" width="150" style="border: 1px solid #ccc;" />
+            <p><strong>Redundant</strong></p>
+        </div>
+        <div style="text-align: center;">
+            <img src="{% static 'examples/a3.jpg' %}" width="150" style="border: 1px solid #ccc;" />
+            <p><strong>Non-Redundant</strong></p>
+        </div>
+        <div style="text-align: center;">
+            <img src="{% static 'examples/a4.jpg' %}" width="150" style="border: 1px solid #ccc;" />
+            <p><strong>Non-Redundant</strong></p>
+        </div>
+    </div>
+</div>
+
+<script>
+function toggleExamples() {
+    var x = document.getElementById("examples");
+    if (x.style.display === "none") {
+        x.style.display = "block";
+    } else {
+        x.style.display = "none";
+    }
+}
+</script>

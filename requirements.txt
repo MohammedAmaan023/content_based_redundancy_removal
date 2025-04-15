@@ -1,0 +1,8 @@
+python
+django
+numpy
+tensorflow
+cv2
+torch
+sklearn
+pillow

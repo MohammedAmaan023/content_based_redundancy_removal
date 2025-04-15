@@ -1,0 +1,138 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Content Based Redundancy Removal</title>
+    <style>
+        body {
+            background: linear-gradient(135deg, #6bdba3 0%, #f8c62c 100%);
+            font-family: 'Segoe UI', Arial, sans-serif;
+            min-height: 100vh;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #333;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 40px auto;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        h1 {
+            font-size: 32px;
+            font-weight: 600;
+            margin-bottom: 30px;
+            color: #2c3e50;
+            text-align: center;
+            position: relative;
+        }
+
+        h1:after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 4px;
+            background: #f8c62c;
+            margin: 15px auto;
+            border-radius: 2px;
+        }
+
+        .options-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .option {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .option:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .option:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, #f8c62c, #6bdba3);
+        }
+
+        h2 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #2c3e50;
+        }
+
+        .description {
+            color: #666;
+            margin-bottom: 25px;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        .btn {
+            display: inline-block;
+            background: linear-gradient(90deg, #f8c62c, #6bdba3);
+            color: #fff;
+            padding: 12px 30px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Content Based Redundancy Removal</h1>
+        <div class="options-container">
+            <div class="option">
+                <div class="icon">📝</div>
+                <h2>Text Analysis</h2>
+                <p class="description">Detect and analyze duplicate content in text documents with advanced similarity matching.</p>
+                <a href="{% url 'text' %}" class="btn" target="_blank">Analyze Text</a>
+            </div>
+            <div class="option">
+                <div class="icon">🖼️</div>
+                <h2>Image Analysis</h2>
+                <p class="description">Compare and identify similar or duplicate images using advanced image processing.</p>
+                <a href="{% url 'compare_two_images' %}" class="btn" target="_blank">Analyze Images</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

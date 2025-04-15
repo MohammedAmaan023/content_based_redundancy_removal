@@ -1,0 +1,186 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Image Redundancy Examples</title>
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #6bdba3 0%, #f8c62c 100%);
+            --primary-color: #6bdba3;
+            --secondary-color: #2c3e50;
+            --accent-color: #f8c62c;
+            --background-color: #ffffff;
+            --box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            margin: 0;
+            padding: 40px;
+            min-height: 100vh;
+            background: var(--primary-gradient);
+            color: var(--secondary-color);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: var(--box-shadow);
+            backdrop-filter: blur(10px);
+        }
+
+        h1 {
+            text-align: center;
+            color: var(--secondary-color);
+            margin-bottom: 40px;
+            font-weight: 600;
+            font-size: 32px;
+            position: relative;
+        }
+
+        h1::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 4px;
+            background: var(--accent-color);
+            margin: 15px auto;
+            border-radius: 2px;
+        }
+
+        .example-section {
+            margin-bottom: 50px;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        h2 {
+            color: var(--secondary-color);
+            margin-bottom: 20px;
+            font-size: 24px;
+            border-left: 4px solid var(--primary-color);
+            padding-left: 15px;
+        }
+
+        .image-comparison {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .image-card {
+            flex: 1;
+            min-width: 300px;
+            max-width: 400px;
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .image-card img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            object-fit: cover;
+        }
+
+        .similarity-score {
+            display: inline-block;
+            background: var(--primary-gradient);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 500;
+            margin: 20px 0;
+        }
+
+        .similarity-info {
+            margin-top: 15px;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .description {
+            color: #666;
+            margin: 20px 0;
+            line-height: 1.6;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 16px;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+            background: var(--primary-gradient);
+            padding: 12px 30px;
+            border-radius: 25px;
+        }
+
+        .back-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .actions {
+            text-align: center;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Image Redundancy Examples</h1>
+
+        <div class="example-section">
+            <h2>Redundant Images</h2>
+            <p class="description">These images are considered redundant due to their high similarity scores. They might be exact duplicates or variations with minimal differences.</p>
+            <div class="image-comparison">
+                <div class="image-card">
+                    <img src="{% static 'examples/a1.jpg' %}" alt="Redundant Image 1">
+                </div>
+                <div class="image-card">
+                    <img src="{% static 'examples/a2.jpg' %}" alt="Redundant Image 2">
+                </div>
+            </div>
+            <div class="similarity-score">Cosine Similarity: 100%</div>
+            <div class="similarity-info">These images are almost identical with only minor differences in lighting or angle.</div>
+        </div>
+
+        <div class="example-section">
+            <h2>Non-Redundant Images</h2>
+            <p class="description">These images have low similarity scores. They represent distinct content with minimal similarities.</p>
+            <div class="image-comparison">
+                <div class="image-card">
+                    <img src="{% static 'examples/a3.jpg' %}" alt="Non-Redundant Image 1">
+                </div>
+                <div class="image-card">
+                    <img src="{% static 'examples/a4.jpg' %}" alt="Non-Redundant Image 2">
+                </div>
+            </div>
+            <div class="similarity-score">Cosine Similarity: 83%</div>
+            <div class="similarity-info">These images show completely different scenes with minimal visual overlap.</div>
+        </div>
+
+        <div class="actions">
+            <a href="{% url 'compare_two_images' %}" class="back-link">Back to Image Comparison</a>
+        </div>
+    </div>
+</body>
+</html>
